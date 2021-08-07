@@ -10,36 +10,36 @@ log_file="/var/log/join_omv_ad.log"
 
 whiptail --title 'Welcome!' \
          --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
-         --msgbox '\n Version: 1.0\n Author: Eduardo Jonck\n Email: eduardo@eduardojonck.com\n\nWelcome to the OpenMediaVault Integration script to Active Directory.\n\nDuring the integration, it will be done a few questions.\n\nExtremely important to answer them correctly.
-\n\n\n' \
-20 60
+	 --msgbox '\n Version: 1.0\n Author: Eduardo Jonck\n Email: eduardo@eduardojonck.com\n\nWelcome to the OpenMediaVault Integration script to Active Directory.\n\nDuring the integration, it will be done a few questions.\n\nExtremely important to answer them correctly.
+		\n\n\n' \
+		20 60
 
 if (whiptail --title "Attention!!!!" \
              --backtitle 'OPENMEDIAVAULT INTEGRATION SCRIPT TO ACTIVE DIRECTORY - EDUARDO JONCK' \
              --yes-button "Yes" --no-button "No" --yesno "The settings below should be ok before proceeding: \n\n * Static IP address already set; \n * Server name; \n * SMB settings as factory default. \n\n Are these settings ok?" \
-20 60) then
+			20 60) then
 
 
 #Test without the server has internet access to install dependency packages
 clear
 echo -e "\033[01;32m###################################### #################################\033[01;37m"
-echo -e "\033[01;32m## Testing OpenMediaVault communication with the Internet, please wait.... ###\033[01;37m"
+echo -e "\033[01;32m## Testing OpenMediaVault communication with for Internet, please wait.... ###\033[01;37m"
 echo -e "\033[01;32m###################################### #################################\033[01;37m"
 ping -q -c3 google.com &>/dev/null
 
 if [$? -eq0]; then
 
         whiptail --title "Internet Communication Test" \
---backtitle 'OPENMEDIAVAULT INTEGRATION SCRIPT TO ACTIVE DIRECTORY - EDUARDO JONCK' \
+		 --backtitle 'OPENMEDIAVAULT INTEGRATION SCRIPT TO ACTIVE DIRECTORY - EDUARDO JONCK' \
                  --msgbox "OpenMediaVault server has internet access, press OK to proceed." \
---fb 10 50
+		 --fb 10 50
 
 else
 
         whiptail --title "Internet Communication Test" \
---backtitle 'OPENMEDIAVAULT INTEGRATION SCRIPT TO ACTIVE DIRECTORY - EDUARDO JONCK' \
+		 --backtitle 'OPENMEDIAVAULT INTEGRATION SCRIPT TO ACTIVE DIRECTORY - EDUARDO JONCK' \
                  --msgbox "The OpenMediaVault server is without internet access. Please review your network settings and rerun this script." \
---fb 20 50
+		 --fb 20 50
   exit
 fi
 
@@ -48,10 +48,10 @@ fi
 (
 c=5
 while [ $c -ne 1 ]
-    of
+    do
         echo $c
         echo "###"
-        echo "$c%"
+        echo "$c %"
         echo "###"
         ((c+=95))
         sleep 1
@@ -76,7 +76,7 @@ hostname_ad=$(whiptail --title "Active Directory Server Name Information" \
                        --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                        --inputbox "Enter the active Directory server name.\n\nEx: ad-server" \
 --fb 15 60 3>&1 1>&2 2>&3)
-while [ ${#hostname_ad} = 0 ]; of
+while [ ${#hostname_ad} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
@@ -84,7 +84,7 @@ ip_srv_ad=$(whiptail --title "Inform AD Server IP" \
                      --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                      --inputbox "Enter the IP address of the Active Directory server\n\nEx:192.168.1.250" \
  --fb 15 60 3>&1 1>&2 2>&3)
-while [ ${#ip_srv_ad} = 0 ]; of
+while [ ${#ip_srv_ad} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
@@ -92,7 +92,7 @@ domain_ad=$(whiptail --title "Domain Setup for Integration" \
                       --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                       --inputbox "Enter the currently configured domain in Active Directory.\n\nEx: domain.local" \
  --fb 15 60 3>&1 1>&2 2>&3)
-while [ ${#ad_domain} = 0 ]; of
+while [ ${#ad_domain} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
@@ -107,15 +107,15 @@ ping -q -c3 $ip_srv_ad &>/dev/null
 if [$? -eq0]; then
 
         whiptail --title "Communication Test (PING)" \
---backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
+		 --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                  --msgbox "PING the AD server IP address was successful, press OK to proceed." \
- --fb 10 50
+		 --fb 10 50
 else
 
         whiptail --title "Communication Test (PING)" \
---backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
+		 --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                  --msgbox "The PING on the IP address of theAD server was not possible. Review your network settings and rerun this script." \
---fb 20 50
+		 --fb 20 50
   exit
 fi
 
@@ -123,8 +123,8 @@ fi
 ip_srv_omv=$(whiptail --title "OpenMediaVault IP Information" \
                       --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                       --inputbox "Which OpenMediaVault IP address do you want to communicate with AD?:" \
-   --fb 10 60 3>&1 1>&2 2>&3)
-while [ ${#ip_srv_omv} = 0 ]; of
+		      --fb 10 60 3>&1 1>&2 2>&3)
+while [ ${#ip_srv_omv} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
@@ -205,7 +205,7 @@ netgroup: nis" > /etc/nsswitch.conf
 (
 c=5
 while [$c -ne 15]
-    of
+    do
         echo $c
         echo "###"
         echo "$c%"
@@ -274,7 +274,7 @@ tac /tmp/smb.tmpl > /tmp/smb.extra
 
 #Write the custom SMB lines into the config.xml file in the samba <extraoptions> tag
 while read line
-of
+do
 sed -i "/homesbrowseable/a ${line}" /etc/openmediavault/config.xml &>/dev/null
 done < /tmp/smb.extra
 rm -rf /tmp/smb.extra
@@ -321,7 +321,7 @@ admin_user=$(whiptail --title "Active Directory User" \
                       --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                       --inputbox "Enter user with Active Directory Administrator rights:" \
  --fb 10 60 3>&1 1>&2 2>&3)
-while [ ${#admin_user} = 0 ]; of
+while [ ${#admin_user} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
@@ -330,14 +330,14 @@ admin_pass=$(whiptail --title "Active Directory User Password" \
                       --backtitle 'OPENMEDIAVAULT ACTIVE DIRECTORY INTEGRATION SCRIPT' \
                       --passwordbox "Enter user password:" \
 --fb 10 60 3>&1 1>&2 2>&3)
-while [ ${#admin_pass} = 0 ]; of
+while [ ${#admin_pass} = 0 ]; do
 [$? -ne 0 ] & exit
        done
 
 (
 c=5
 while [ $c -ne 20 ]
-    of
+    do
         echo $c
         echo "###"
         echo "$c%"
